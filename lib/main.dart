@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() {
             int index = products.indexWhere((value) => value.productId == product.productId);
             if(index != -1){
-              products[index] = product;
+              products[index] = output;
             }
             else{
               products.add(output);
@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() {
             int index = sales.indexWhere((value) => value.productId == sale.productId);
             if(index != -1){
-              sales[index] = sale;
+              sales[index] = output;
             }
             else{
               sales.add(output);
