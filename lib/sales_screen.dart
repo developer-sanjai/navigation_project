@@ -5,16 +5,14 @@ class Sales{
   Sales(this.productId,this.saleQuantity); 
 }
 class SalesScreen extends StatefulWidget {
-  const SalesScreen({super.key});
+  final Sales sale;
+  const SalesScreen({super.key,required this.sale});
 
   @override
   State<SalesScreen> createState() => _SalesScreenState();
 } 
 class _SalesScreenState extends State<SalesScreen> {
-  Sales sales =Sales('','');
-  resultSales(){
-    Navigator.pop(context,sales);
-  }
+  late Sales sale =widget.sale;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +46,7 @@ class _SalesScreenState extends State<SalesScreen> {
                 children: [
                   TextFormField(
                     onChanged:(value){
-                      sales.productId = value;
+                      sale.productId = value;
                     },
                     decoration:const  InputDecoration(
                       hintText: 'Enter Product Id',
@@ -60,7 +58,7 @@ class _SalesScreenState extends State<SalesScreen> {
                     ),
                   TextFormField(
                     onChanged:(value){
-                      sales.saleQuantity = value;
+                      sale.saleQuantity = value;
                     },
                     decoration:const  InputDecoration(
                       hintText: 'Enter Sales Quantity',
@@ -71,7 +69,9 @@ class _SalesScreenState extends State<SalesScreen> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: resultSales,
+                    onPressed: (){
+                      Navigator.pop(context,sale);
+                    },
                      child:const Text('Submit'),
                   ),
                 ],

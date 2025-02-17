@@ -17,25 +17,37 @@ class _HomeScreenState extends State<HomeScreen> {
 
     List<Sales> sales =[];
 
-      showProductPage()async {
+      showProductPage(Product product)async {
         final output =await Navigator.push(context,
          MaterialPageRoute(builder: 
-         (context) => const ProductScreen(),
+         (context) => ProductScreen(product: product)
          ));
          if(output != null){
           setState(() {
-            products.add(output);
+            int index = products.indexWhere((value) => value.productId == product.productId);
+            if(index != -1){
+              products[index] = product;
+            }
+            else{
+              products.add(output);
+            }
           });
          }
       }
-      showSalesPage()async {
+      showSalesPage(Sales sale)async {
         final output =await Navigator.push(context,
          MaterialPageRoute(builder: 
-         (context) => const SalesScreen(),
+         (context) =>  SalesScreen(sale: sale),
          ));
          if(output != null){
           setState(() {
-            sales.add(output);
+            int index = sales.indexWhere((value) => value.productId == sale.productId);
+            if(index != -1){
+              sales[index] = sale;
+            }
+            else{
+              sales.add(output);
+            }
           });
          }
       }
@@ -81,7 +93,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontSize: 20,
                         ),),
                      ),
-                    ElevatedButton(onPressed: showProductPage,
+                    ElevatedButton(onPressed: ()async{
+                      showProductPage(Product('','',''));
+                    },
                        child:const Text('Add'),
                     ),
                   ],
@@ -99,7 +113,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       title: Text("""ProductId:${product.productId},
                       ProductName:${product.productName},
                       ProductQuantity:${product.productQuantity}"""),
-                    );
+                      trailing: const Icon(Icons.edit),
+                      onTap:  ()async{
+                        showProductPage(product);
+                      },
+                      );
                   }),
               ),
               ],
@@ -118,7 +136,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontSize: 20,
                       ),),
                     ),
-                    ElevatedButton(onPressed:showSalesPage,
+                    ElevatedButton(onPressed:()async{
+                      showSalesPage(Sales('',''));
+                    },
                      child: const Text('Add'),
                     ),
                   ],
@@ -135,6 +155,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       return ListTile(
                       title: Text("""ProductId:${sale.productId},
                       SalesQuantity:${sale.saleQuantity}"""),
+                      trailing: const Icon(Icons.edit),
+                      onTap: ()async{
+                        showSalesPage(sale);
+                      },
                     );
                     },
                       ),

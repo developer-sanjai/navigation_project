@@ -7,17 +7,15 @@ class Product{
     Product(this.productName,this.productId,this.productQuantity);
 }
 class ProductScreen extends StatefulWidget {
-  const ProductScreen({super.key});
+  final Product product;
+  const ProductScreen({super.key,required this.product});
 
   @override
   State<ProductScreen> createState() => _ProductScreenState();
 }
 
 class _ProductScreenState extends State<ProductScreen> {
-  Product product =Product('','','');
-  resultProduct(){
-    Navigator.pop(context,product); 
-  }
+late Product product =widget.product;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,6 +48,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                  children: [
                    TextFormField(
+                    initialValue:product.productName ,
                      onChanged:(value){
                        product.productName = value;
                      },
@@ -62,6 +61,7 @@ class _ProductScreenState extends State<ProductScreen> {
                      ),
                    ),
                    TextFormField(
+                    initialValue: product.productId,
                      onChanged:(value){
                        product.productId = value;
                      },
@@ -74,6 +74,7 @@ class _ProductScreenState extends State<ProductScreen> {
                      ),
                      ),
                    TextFormField(
+                    initialValue: product.productQuantity,
                      onChanged:(value){
                        product.productQuantity = value;
                      },
@@ -86,7 +87,9 @@ class _ProductScreenState extends State<ProductScreen> {
                      ),
                    ),
                    ElevatedButton(
-                     onPressed:resultProduct,
+                     onPressed:(){
+                      Navigator.pop(context,product); 
+                     },
                       child:const Text('Submit'),
                    ),
                  ],
