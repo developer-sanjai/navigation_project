@@ -45,11 +45,12 @@ class _SalesScreenState extends State<SalesScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   TextFormField(
+                    initialValue: sale.productId,
                     onChanged:(value){
                       sale.productId = value;
                     },
                     decoration:const  InputDecoration(
-                      hintText: 'Enter Product Id',
+                      labelText: 'Enter Product Id',
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(15),
                         ),
@@ -57,11 +58,12 @@ class _SalesScreenState extends State<SalesScreen> {
                     ),
                     ),
                   TextFormField(
+                    initialValue: sale.saleQuantity,
                     onChanged:(value){
                       sale.saleQuantity = value;
                     },
                     decoration:const  InputDecoration(
-                      hintText: 'Enter Sales Quantity',
+                      labelText: 'Enter Sales Quantity',
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(15),
                         ),
