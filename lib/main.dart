@@ -14,8 +14,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<Product> products =[];
-
-    List<Sales> sales =[];
+  List<Sales> sales =[];
+  List<Reports> reports =[];
 
       showProductPage(Product product)async {
         final output =await Navigator.push(context,
@@ -44,13 +44,25 @@ class _HomeScreenState extends State<HomeScreen> {
             int index = sales.indexWhere((value) => value.productId == sale.productId);
             if(index != -1){
               sales[index] = output;
+              updateReports();
             }
             else{
               sales.add(output);
             }
+            updateReports();
           });
          }
       }
+    void updateReports()async {
+    reports.clear();
+    for (var sale in sales) {
+      Product product = products.firstWhere((product) => product.productId == sale.productId);
+      double totalAmount = sale.saleQuantityAsInt * product.priceAsDouble;
+      Reports report = Reports(product, sale, totalAmount);
+      reports.add(report);
+    }
+    reports.sort((a, b) => b.totalAmount.compareTo(a.sale.saleQuantityAsInt));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,33 +88,33 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Expanded(
               child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Row(
+                Column(
                   children: [
-                    const Padding(
-                       padding:  EdgeInsets.only(left: 20,right: 300),
-                       child: Text('Products',
-                        style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 20,
-                        ),),
-                     ),
-                    ElevatedButton(onPressed: ()async{
-                      showProductPage(Product('','',''));
-                    },
-                       child:const Text('Add'),
+                    Row(
+                      children: [
+                        const Padding(
+                           padding:  EdgeInsets.only(left: 20,right: 300),
+                           child: Text('Products',
+                            style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 20,
+                            ),),
+                         ),
+                        ElevatedButton(onPressed: ()async{
+                          showProductPage(Product('','','',''));
+                        },
+                           child:const Text('Add'),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              Container(
+                    Container(  
                 margin: const EdgeInsets.only(left: 30,right: 30),
-                height: 400,
+                height: 200,
                 width: 500,
                 color:const Color.fromRGBO(114, 157, 198,1),
                 child: ListView.builder(
@@ -110,42 +122,42 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (context,index){
                     final product =products[index];
                     return ListTile(
-                      title: Text("""ProductId:${product.productId},
-                      ProductName:${product.productName},
-                      ProductQuantity:${product.productQuantity}"""),
+                      title: Text("ProductId:${product.productId}"),
+                      subtitle:Text("ProductName:${product.productName},Stock:${product.stock},Price${product.price}"),
                       trailing: const Icon(Icons.edit),
                       onTap:  ()async{
                         showProductPage(product);
                       },
                       );
                   }),
-              ),
-              ],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Row(
-                  children: [
-                    const Padding(
-                      padding:  EdgeInsets.only(left: 20,right: 300),
-                      child: Text('Sales',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 20,
-                      ),),
-                    ),
-                    ElevatedButton(onPressed:()async{
-                      showSalesPage(Sales('',''));
-                    },
-                     child: const Text('Add'),
-                    ),
+                  ),
                   ],
                 ),
-                Container(
+                Column(
+              children: [
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        const Padding(
+                          padding:  EdgeInsets.only(left: 20,right: 300),
+                          child: Text('Sales',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 20,
+                          ),),
+                        ),
+                        ElevatedButton(onPressed:()async{
+                          showSalesPage(Sales('',''));
+                        },
+                         child: const Text('Add'),
+                        ),
+                      ],
+                    ),
+                    Container(
                   margin: const EdgeInsets.only(left: 30,right: 30),
-                  height: 400,
+                  height: 200,
                   width: 500,
                   color:const Color.fromRGBO(233, 228, 255,1,),
                   child: ListView.builder(
@@ -153,8 +165,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemBuilder: (context,index){
                       final sale =sales[index];
                       return ListTile(
-                      title: Text("""ProductId:${sale.productId},
-                      SalesQuantity:${sale.saleQuantity}"""),
+                      title: Text("ProductId:${sale.productId}"),
+                      subtitle: Text("SalesQuantity:${sale.saleQuantity}"),
                       trailing: const Icon(Icons.edit),
                       onTap: ()async{
                         showSalesPage(sale);
@@ -163,13 +175,56 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                       ),
                     ),
+                  ],
+                ),
+              ],
+              
+            ),
               ],
             ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const Row(
+                      children: [
+                        Text('Top Sale',
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                        ),),
+                      ],
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 230,bottom:80),
+                  height: 300,
+                  width: 460,
+                  color: Colors.blue,
+                  child: ListView.builder(
+                          itemCount: reports.length,
+                          itemBuilder: (context, index) {
+                            final report = reports[index];
+                            return ListTile(
+                              title: Text("ProductId:${report.product.productId}"),
+                              subtitle: Text(
+                                  "ProductName:${report.product.productName},SaleQuantity:${report.sale.saleQuantity}, Total Sales: \$${report.totalAmount}"),
+                              trailing: const Icon(Icons.edit),
+                            );
+                          },
+                        ),
+                ),
+                  ],
+                ),
+                Column(),
+              ],
+            )
           ],
         ),)
           ],
         ),
-
       ),
     );
   }
@@ -185,4 +240,11 @@ class MyApp extends StatelessWidget {
       home: HomeScreen(),
     );
   }
+}
+class Reports{
+  Product product;
+  Sales sale;
+  double totalAmount; 
+
+  Reports(this.product, this.sale,this.totalAmount); 
 }

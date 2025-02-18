@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 class Product{
     String productName;
     String productId ;
-    String productQuantity;
+    String stock;
+    String price;
 
-    Product(this.productName,this.productId,this.productQuantity);
+    Product(this.productName,this.productId,this.stock,this.price);
+    int get stockAsInt => int.parse(stock);
+    double get priceAsDouble => double.parse(price);
 }
 class ProductScreen extends StatefulWidget {
   final Product product;
@@ -48,6 +51,19 @@ late Product product =widget.product;
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                  children: [
                    TextFormField(
+                    initialValue: product.productId,
+                     onChanged:(value){
+                       product.productId = value;
+                     },
+                     decoration:const  InputDecoration(
+                       labelText: 'Enter Product Id',
+                       focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(15),
+                        ),
+                      )
+                     ),
+                     ),
+                     TextFormField(
                     initialValue:product.productName ,
                      onChanged:(value){
                        product.productName = value;
@@ -61,25 +77,25 @@ late Product product =widget.product;
                      ),
                    ),
                    TextFormField(
-                    initialValue: product.productId,
+                    initialValue: product.stock,
                      onChanged:(value){
-                       product.productId = value;
+                       product.stock = value;
                      },
                      decoration:const  InputDecoration(
-                       labelText: 'Enter Product Id',
+                       labelText: 'Enter Product Stock',
                        focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(15),
                         ),
                       )
                      ),
-                     ),
+                   ),
                    TextFormField(
-                    initialValue: product.productQuantity,
+                    initialValue: product.price,
                      onChanged:(value){
-                       product.productQuantity = value;
+                       product.price = value;
                      },
                      decoration:const  InputDecoration(
-                       labelText: 'Enter Product Quantity',
+                       labelText: 'Enter Product Price',
                        focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(15),
                         ),

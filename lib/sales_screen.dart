@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 class Sales{
   String productId ;
-  String saleQuantity ;
+  String saleQuantity;
   Sales(this.productId,this.saleQuantity); 
+  int get saleQuantityAsInt =>int.parse(saleQuantity);
 }
 class SalesScreen extends StatefulWidget {
   final Sales sale;
